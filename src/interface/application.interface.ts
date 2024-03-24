@@ -1,6 +1,7 @@
 export interface IApplication {
     title: string;
     description: string;
-    createdAt?: Date,
-    responses?: []
+    createdAt?: Date;
+    id: number;
+    responses?: [];
 }
