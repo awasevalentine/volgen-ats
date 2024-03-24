@@ -6,14 +6,12 @@ import {LinkedinShareButton, FacebookShareButton,
     FacebookIcon,
     EmailIcon,
     InstapaperShareButton,
-    TelegramIcon,
     TwitterShareButton,
     TwitterIcon,
-    PinterestShareButton,
-    PinterestIcon,
     InstapaperIcon} from 'react-share'
+    import { GrFormClose } from "react-icons/gr";
 
-const ShareLink = ({url}: {url: string}) => {
+const ShareLink = ({url, setIsShare}: {url: string, setIsShare: (e: boolean)=>void}) => {
     return ( 
         <Paper
         elevation={3} 
@@ -40,6 +38,12 @@ const ShareLink = ({url}: {url: string}) => {
             },
           }}
         >
+            <div className='absolute right-[26%] top-1 cursor-pointer shadow-xl 
+            font-bold flex items-center'
+            onClick={()=> setIsShare(false)}
+            >
+            <GrFormClose size={20} fontWeight={700} />
+            </div>
             <div className="w-full flex flex-row gap-6 justify-center">
                 <WhatsappShareButton 
                 url={url}

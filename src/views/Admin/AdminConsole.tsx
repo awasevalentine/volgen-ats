@@ -68,7 +68,7 @@ const AdminConsole = () => {
       <div className="w-full lg:w-[50%]">
       {
         isShareBtn && (
-            <ShareLink url={link} />
+            <ShareLink setIsShare={setIsShareBtn} url={link} />
         )
       }
       </div>
