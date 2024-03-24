@@ -4,29 +4,24 @@ import { IApplication } from "../../interface/application.interface";
 import { shortenStr } from "../../util/stringLength";
 import { IoEyeOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useCallback } from "react";
 
 type Props = {
   item: IApplication;
+  setLink: (e: string) => void,
+  setIsShareBtn: (e: boolean) => void
 };
 
-const ItemCard = ({ item }: Props) => {
+const ItemCard = ({ item, setLink, setIsShareBtn }: Props) => {
   const mediaMatches = useMediaQuery("(max-width:410px)");
   const router = useNavigate();
 
-  const handleCopy = () => {
-    const fullPath = window.location.origin + `/view-detail/${item?.id}`;
 
-    navigator.clipboard
-      .writeText(fullPath)
-      .then(() => {
-        console.log("Path copied successfully:", fullPath);
-        toast.success("Application link copied");
-      })
-      .catch((err) => {
-        console.error("Failed to copy path:", err);
-      });
-  };
+  const handleCopy = useCallback(() => {
+    const fullPath = window.location.origin + `/view-detail/${item?.id}`;
+    setLink(fullPath)
+    setIsShareBtn(true)
+  },[]);
 
   return (
     <Card>

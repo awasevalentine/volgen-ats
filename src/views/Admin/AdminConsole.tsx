@@ -8,11 +8,16 @@ import { applications } from "./constant/apllications";
 import CustomModal from "../../components/Modal/CustomModal";
 import AddApplication from "./AddApplication";
 import { useState } from "react";
+import ShareLink from "../../components/share/ShareLink";
 
 
 const AdminConsole = () => {
   const route = useNavigate();
   const [isOpen, setOpen] = useState(false)
+  const [isShareBtn, setIsShareBtn]= useState(false)
+  const [link, setLink] = useState("")
+
+
 
   return (
     <div className="w-full h-full">
@@ -51,7 +56,7 @@ const AdminConsole = () => {
         ) : (
           <Grid>
             {applications.map((res, index) => (
-              <ItemCard item={res} key={index} />
+              <ItemCard setIsShareBtn={setIsShareBtn} setLink={setLink} item={res} key={index} />
             ))}
           </Grid>
         )}
@@ -59,6 +64,17 @@ const AdminConsole = () => {
       <CustomModal isOpen={isOpen} onCancel={setOpen}>
         <AddApplication setOpen={setOpen} />
       </CustomModal>
+      <div className="w-full flex justify-center absolute top-[50%]">
+      <div className="w-full lg:w-[50%]">
+      {
+        isShareBtn && (
+            <ShareLink url={link} />
+        )
+      }
+      </div>
+      </div>
+
+
     </div>
   );
 };
