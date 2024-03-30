@@ -4,10 +4,23 @@ import { Dialog, Transition } from '@headlessui/react';
 function CustomModal({ isOpen,children, onCancel }) {
   const cancelButtonRef = useRef(null);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (cancelButtonRef.current && !cancelButtonRef.current.contains(event.target)) {
+        onCancel();
+      }
+    }
 
-  useEffect(()=>{
-    
-  },[])
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onCancel]);
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>

@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import HomeView from './views/Home';
 import AdminConsole from './views/Admin/AdminConsole';
 import ViewApplication from './views/Admin/ViewApplication';
+import CandidatePage from './views/CandidatePage/CandidatePage';
 
 function App() {
 
@@ -13,6 +14,9 @@ function App() {
           <Route path='' element={<HomeView />} />
           <Route path='/applications' element={<AdminConsole />} />
           <Route path='/view-detail/:jobId' element={<ViewApplication />} />
+        </Routes>
+        <Routes>
+          <Route path="/job-application" element={<CandidatePage />} />
         </Routes>
       </Router>
     </div>
