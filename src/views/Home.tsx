@@ -22,7 +22,7 @@ const HomeView = () => {
     }
   return (
     <div className="flex items-center justify-center h-full">
-      <div className="w-1/3 flex flex-col">
+      <div className="w-[90%] md:w-1/3 flex flex-col">
         <h2 className="text-3xl text-[#0959AA] mb-5 antialiased font-bold">Volgen</h2>
         <Typography className="antialiased text-[17px]">
             Volgen is a HR recruitment tool for collecting, managing and tracking candidate applications.
