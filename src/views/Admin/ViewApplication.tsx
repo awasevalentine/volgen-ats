@@ -15,6 +15,8 @@ import dayjs from "dayjs";
 import pdf from "../../assets/API Design Patterns.pdf";
 import { useFetchApplicationQuery } from "../../lib/features/adminSlice";
 import CustomSpinner from "../../components/Spinner/Spinner";
+import useAuthHelper from "../../hooks/auth/authHelper";
+import CandidatePage from "../CandidatePage/CandidatePage";
 
 const ViewApplication = () => {
   const routeParam = useParams();
@@ -22,11 +24,11 @@ const ViewApplication = () => {
     String(routeParam?.jobId)
   );
 
+  const { isAuthenticated, userDetails } = useAuthHelper();
+
   const handleViewResume = (pdfPath: string) => {
     window.open(pdfPath, "_blank");
   };
-
-  console.log("applicatoon::: ", error);
 
   return (
     <div
@@ -34,7 +36,9 @@ const ViewApplication = () => {
      md:pt-[3rem]"
     >
       <h2 className="text-2xl text-center text-[#0959AA] font-bold antialiased">
-        View Application Responses
+        {userDetails?.first_name === "user"
+          ? "View Application"
+          : "View Application Responses"}
       </h2>
       <div className="pb-[2rem] flex justify-center">
         <Paper
@@ -125,80 +129,95 @@ const ViewApplication = () => {
                     }}
                     className="w-[97%] md:w-[50%] mb-[20px]  px-[13px] md:py-[25px] md:px-[20px] h-full"
                   >
-                    <h5 className="text-[20px] font-bold antialiased">
-                      Application Responses
-                    </h5>
-                    <div className="mt-[1.2rem] md:mt-[1.5rem]">
-                      {data?.data?.application?.responses?.length === 0 || !data?.data?.application?.responses ? (
-                        <Typography
-                          className="flex text-black justify-center border-dashed
-                 h-[250px] w-[300px] border rounded-lg items-center"
-                        >
-                          No Applicant yet!
-                        </Typography>
-                      ) : (
-                        <>
-                          {data?.data?.application?.responses?.map((res) => (
-                            <Accordion>
-                              <AccordionSummary
-                                expandIcon={<MdOutlineExpandMore />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                                className="text-[16px] font-semibold"
-                              >
-                                {res?.fullname}
-                              </AccordionSummary>
-                              <AccordionDetails className="flex flex-col gap-3">
-                                <InputText value={res?.email} readOnly />
-                                <InputText value={res?.country} readOnly />
-                                <InputText value={res?.gender} readOnly />
-                                <InputText value={res?.hearAboutUs} readOnly />
-                                <div className="flex flex-row justify-between my-4">
-                                  <Button
-                                    sx={{
-                                      backgroundImage:
-                                        "linear-gradient(to bottom, #0A66C2, #064079)",
-                                      outline: "1px solid #033363",
-                                      color: "#F0F7FF",
-                                      padding: "3px 10px",
-                                      borderRadius: "50px",
-                                      width: "150px",
-                                      textTransform: "capitalize",
+                    {userDetails?.first_name === "user" ? (
+                      <CandidatePage />
+                    ) : (
+                      <>
+                        <h5 className="text-[20px] font-bold antialiased">
+                          Application Responses
+                        </h5>
+                        <div className="mt-[1.2rem] md:mt-[1.5rem]">
+                          {data?.data?.application?.responses?.length === 0 ||
+                          !data?.data?.application?.responses ? (
+                            <Typography
+                              className="flex text-black justify-center border-dashed
+                   h-[250px] w-[300px] border rounded-lg items-center"
+                            >
+                              No Applicant yet!
+                            </Typography>
+                          ) : (
+                            <>
+                              {data?.data?.application?.responses?.map(
+                                (res) => (
+                                  <Accordion>
+                                    <AccordionSummary
+                                      expandIcon={<MdOutlineExpandMore />}
+                                      aria-controls="panel1-content"
+                                      id="panel1-header"
+                                      className="text-[16px] font-semibold"
+                                    >
+                                      {res?.fullname}
+                                    </AccordionSummary>
+                                    <AccordionDetails className="flex flex-col gap-3">
+                                      <InputText value={res?.email} readOnly />
+                                      <InputText
+                                        value={res?.country}
+                                        readOnly
+                                      />
+                                      <InputText value={res?.gender} readOnly />
+                                      <InputText
+                                        value={res?.hearAboutUs}
+                                        readOnly
+                                      />
+                                      <div className="flex flex-row justify-between my-4">
+                                        <Button
+                                          sx={{
+                                            backgroundImage:
+                                              "linear-gradient(to bottom, #0A66C2, #064079)",
+                                            outline: "1px solid #033363",
+                                            color: "#F0F7FF",
+                                            padding: "3px 10px",
+                                            borderRadius: "50px",
+                                            width: "150px",
+                                            textTransform: "capitalize",
 
-                                      "&:hover": {
-                                        transform: "scale(1.05)",
-                                      },
-                                    }}
-                                    // onClick={() => route("/")}
-                                  >
-                                    Download Resume
-                                  </Button>
-                                  <Button
-                                    sx={{
-                                      backgroundImage:
-                                        "linear-gradient(to bottom, #0A66C2, #064079)",
-                                      outline: "1px solid #033363",
-                                      color: "#F0F7FF",
-                                      padding: "3px 10px",
-                                      borderRadius: "50px",
-                                      width: "150px",
-                                      textTransform: "capitalize",
+                                            "&:hover": {
+                                              transform: "scale(1.05)",
+                                            },
+                                          }}
+                                          // onClick={() => route("/")}
+                                        >
+                                          Download Resume
+                                        </Button>
+                                        <Button
+                                          sx={{
+                                            backgroundImage:
+                                              "linear-gradient(to bottom, #0A66C2, #064079)",
+                                            outline: "1px solid #033363",
+                                            color: "#F0F7FF",
+                                            padding: "3px 10px",
+                                            borderRadius: "50px",
+                                            width: "150px",
+                                            textTransform: "capitalize",
 
-                                      "&:hover": {
-                                        transform: "scale(1.05)",
-                                      },
-                                    }}
-                                    onClick={() => handleViewResume(pdf)}
-                                  >
-                                    View Resume
-                                  </Button>
-                                </div>
-                              </AccordionDetails>
-                            </Accordion>
-                          ))}
-                        </>
-                      )}
-                    </div>
+                                            "&:hover": {
+                                              transform: "scale(1.05)",
+                                            },
+                                          }}
+                                          onClick={() => handleViewResume(pdf)}
+                                        >
+                                          View Resume
+                                        </Button>
+                                      </div>
+                                    </AccordionDetails>
+                                  </Accordion>
+                                )
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </Box>
                 </>
               )}

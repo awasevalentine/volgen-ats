@@ -17,7 +17,7 @@ const authSlice = createSlice({
     },
     setProfileDetails: (state, action) => {
       localStorage.setItem('Profile', JSON.stringify(action.payload));
-      state.profile = JSON.stringify(action.payload);
+      state.profile = action.payload;
     },
     logOut: (state, action) => {
       localStorage.removeItem('Token');

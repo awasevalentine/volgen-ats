@@ -19,14 +19,14 @@ const CandidatePage = () => {
     heardAboutUs: "",
   };
 
-  useEffect(()=>{
-    if(isError){
-        toast.error("Unable to apply")
+  useEffect(() => {
+    if (isError) {
+      toast.error("Unable to apply");
     }
-    if(isSuccess){
-        toast.success("Your application was submitted successfully")
+    if (isSuccess) {
+      toast.success("Your application was submitted successfully");
     }
-  },[isError, isSuccess])
+  }, [isError, isSuccess]);
 
   const ValSchema = Yup.object({
     fullname: Yup.string().required("Fullname is required"),
@@ -38,12 +38,12 @@ const CandidatePage = () => {
   const handleSubmit = (values, { resetForm }) => {
     const formData = new FormData();
     Object.keys(values).forEach((key) => {
-        if (key === 'resume' && values[key]) {
-          formData.append(key, values[key][0]);
-        } else {
-          formData.append(key, values[key]);
-        }
-      });
+      if (key === "resume" && values[key]) {
+        formData.append(key, values[key][0]);
+      } else {
+        formData.append(key, values[key]);
+      }
+    });
     console.log("the form data:::: ", formData);
     // setIsSuccess(true);
     setIsError(true);
@@ -51,9 +51,9 @@ const CandidatePage = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-10 pt-[5rem]  items-center">
-      <HeaderText title="Application Form" />
-      <div className="w-[97%] md:w-[50%] py-10 flex flex-col justify-center">
+    <div className="w-full h-full flex flex-col gap-10">
+      <h5 className="text-[20px] font-bold antialiased">Application Form</h5>
+      <div className="w-[97%] pb-5 flex flex-col justify-center">
         {isSuccess && (
           <div className="h-[50px] items-center">
             <Typography className="text-[#84cc16]">
@@ -75,7 +75,7 @@ const CandidatePage = () => {
           onSubmit={handleSubmit}
         >
           {({ submitForm, resetForm }) => (
-            <Form className="flex w-[95%] justify-center items-center flex-col gap-5">
+            <Form className="flex w-[95%] justify-center flex-col gap-5">
               <div className="flex w-full flex-col">
                 <label htmlFor="fullname" className="ml-1 font-[600]">
                   Fullname<span className="text-red-900 pl-1">*</span>
@@ -182,7 +182,7 @@ const CandidatePage = () => {
                 />
               </div>
 
-              <div className="flex flex-row gap-5">
+              <div className="flex flex-row justify-start gap-5">
                 <button
                   className="bg-[#0959AA] py-[5px] px-[20px] text-white rounded"
                   type="submit"

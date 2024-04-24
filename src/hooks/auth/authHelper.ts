@@ -14,8 +14,13 @@ const useAuthHelper = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userDetails, setUserDetails] = useState<UserData | null>(null);
 
+
   useEffect(() => {
+  console.log("the profile22:: ", getProfile)
+
     if (getProfile) {
+  console.log("the profile44444:: ", getProfile)
+      
       setUserDetails(getProfile);
       setIsLoading(false);
     }

@@ -5,12 +5,12 @@ import ItemCard from "./ItemsCard";
 import Grid from "../../components/Grid/Grid";
 import CustomModal from "../../components/Modal/CustomModal";
 import AddApplication from "./AddApplication";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ShareLink from "../../components/share/ShareLink";
 import CustomButton from "../../components/Button/CustomButton";
 import Signup from "./Auth/Signup";
 import SignIn from "./Auth/SignIn";
-import { useAppDispatch } from "../../lib/store";
+import { RootState, useAppDispatch } from "../../lib/store";
 import { logOut } from "../../lib/features/authSlice";
 import useAuthHelper from "../../hooks/auth/authHelper";
 import AdminAuthGuard from "../../hooks/AdminAuthGuard";
@@ -18,6 +18,7 @@ import { useFetchApplicationsQuery } from "../../lib/features/adminSlice";
 import CustomSpinner from "../../components/Spinner/Spinner";
 import { Box, styled, Typography } from "@mui/material";
 import { IoPersonCircleSharp } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 const AdminConsole = () => {
   const route = useNavigate();
@@ -29,11 +30,20 @@ const AdminConsole = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, userDetails, isLoading } = useAuthHelper();
   const { isError, error, isFetching, data } = useFetchApplicationsQuery();
+  const getProfile = useSelector((state: RootState) => state.auth.profile);
+
+  console.log("the profile navbar:: ", userDetails)
 
   const handleLogOut = () => {
     dispatch(logOut(""));
     route("/");
   };
+
+  useEffect(() => {
+    console.log('Navbar rendered getProfile', getProfile)
+    // console.log('Navbar rendered getProfile-parsed', JSON.parse(getProfile))
+    console.log('Navbar rendered userDetails', userDetails)
+  }, [])
 
   return (
     <AdminAuthGuard>
@@ -44,7 +54,7 @@ const AdminConsole = () => {
               <div className="flex flex-row gap-1 items-center">
                 <PersonIcon sx={{ fontSize: { xs: "20px", md: "25px" } }} />
                 <span className="text-1xl capitalize font-semibold antialiased">
-                  {userDetails?.first_name}
+                  {getProfile?.first_name}
                 </span>
               </div>
             )}
