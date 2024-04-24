@@ -3,6 +3,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import HeaderText from "../../../components/Header/Header";
 import * as Yup from "yup";
 import { useState } from "react";
+import { useRegisterMutation } from "../../../lib/features/authApiSlice";
+import { toast } from "react-toastify";
 
 const Signup = ({
   setIsOpenAuth,
@@ -11,17 +13,19 @@ const Signup = ({
   setIsOpenAuth: (e: boolean) => void;
   setAuthOption: (e: string) => void;
 }) => {
-  const [isLodaing, setIsloading] = useState(false);
+  const [register, {isLoading}] = useRegisterMutation()
   const [showPassword, setShowPassword] = useState(false);
   const initialValues = {
-    name: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
     cPassword: "",
   };
 
   const ValSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
+    first_name: Yup.string().required("Firstname is required"),
+    last_name: Yup.string().required("Lastname is required"),
     email: Yup.string().required("Email is required"),
     password: Yup.string().required("Password is required"),
     cPassword: Yup.string()
@@ -30,10 +34,14 @@ const Signup = ({
   });
 
   const handleSubmit = (value, { resetForm }) => {
-    console.log("the form data:::: ", value);
-    setIsOpenAuth(false);
-    setIsloading(true);
-    resetForm();
+        register(value).unwrap().then((response)=>{
+            toast.success(response?.message)
+            setAuthOption("signIn")
+            resetForm();
+        
+        }).catch((error)=>{
+            toast.error(error?.data?.error)
+        })
   };
 
   return (
@@ -48,17 +56,33 @@ const Signup = ({
         {({ submitForm, resetForm }) => (
           <Form className="flex w-[95%] justify-center items-center flex-col gap-5">
             <div className="flex w-full flex-col">
-              <label htmlFor="name" className="ml-1 font-[600]">
-                Name<span className="text-red-900 pl-1">*</span>
+              <label htmlFor="first_name" className="ml-1 font-[600]">
+                Firstname<span className="text-red-900 pl-1">*</span>
               </label>
               <Field
                 type="text"
-                id="name"
-                name="name"
+                id="first_name"
+                name="first_name"
                 className="border-[1.5px] h-9 p-2 rounded-lg focus:outline-none"
               />
               <ErrorMessage
-                name="name"
+                name="first_name"
+                component="div"
+                className="text-red-700"
+              />
+            </div>
+            <div className="flex w-full flex-col">
+              <label htmlFor="last_name" className="ml-1 font-[600]">
+                Lasttname<span className="text-red-900 pl-1">*</span>
+              </label>
+              <Field
+                type="text"
+                id="last_name"
+                name="last_name"
+                className="border-[1.5px] h-9 p-2 rounded-lg focus:outline-none"
+              />
+              <ErrorMessage
+                name="last_name"
                 component="div"
                 className="text-red-700"
               />
@@ -128,7 +152,7 @@ const Signup = ({
                 className="bg-[#0959AA] py-[5px] px-[20px] text-white rounded"
                 type="submit"
               >
-                {isLodaing ? (
+                {isLoading ? (
                   <div className="flex items-center gap-2">
                     <CircularProgress disableShrink size={20} />
                     Submit ...

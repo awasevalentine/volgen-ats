@@ -3,20 +3,30 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import HeaderText from "../../../components/Header/Header";
 import * as Yup from "yup";
 import { useState } from "react";
+import { useLoginMutation } from "../../../lib/features/authApiSlice";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../../../lib/store";
+import { setProfileDetails, setToken } from "../../../lib/features/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = ({
   setIsOpenAuth,
   setAuthOption,
+  fromHome
 }: {
   setIsOpenAuth: (e: boolean) => void;
   setAuthOption: (e: string) => void;
+  fromHome?: boolean
 }) => {
-  const [isLodaing, setIsloading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [login, {isLoading}] = useLoginMutation()
+  const dispatch = useAppDispatch()
   const initialValues = {
     email: "",
     password: "",
   };
+
+  const route = useNavigate()
 
   const ValSchema = Yup.object({
     email: Yup.string().required("Email is required"),
@@ -24,10 +34,16 @@ const SignIn = ({
   });
 
   const handleSubmit = (value, { resetForm }) => {
-    console.log("the form data:::: ", value);
-    setIsOpenAuth(false);
-    setIsloading(true);
-    resetForm();
+    login(value).unwrap().then((res)=>{
+      toast.success(res?.message)
+      dispatch(setToken(res?.data?.access_token))
+      dispatch(setProfileDetails(res?.data?.profile))
+      setIsOpenAuth(false);
+      resetForm();
+      if(fromHome) route("/applications") 
+    }).catch((error)=>{
+      toast.error(error?.data?.error)
+    })
   };
 
   return (
@@ -89,7 +105,7 @@ const SignIn = ({
                 className="bg-[#0959AA] py-[5px] px-[20px] text-white rounded"
                 type="submit"
               >
-                {isLodaing ? (
+                {isLoading ? (
                   <div className="flex items-center gap-2">
                     <CircularProgress disableShrink size={20} />
                     Login ...
