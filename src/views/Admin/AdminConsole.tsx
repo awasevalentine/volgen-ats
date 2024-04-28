@@ -32,18 +32,11 @@ const AdminConsole = () => {
   const { isError, error, isFetching, data } = useFetchApplicationsQuery();
   const getProfile = useSelector((state: RootState) => state.auth.profile);
 
-  console.log("the profile navbar:: ", userDetails)
 
   const handleLogOut = () => {
     dispatch(logOut(""));
     route("/");
   };
-
-  useEffect(() => {
-    console.log('Navbar rendered getProfile', getProfile)
-    // console.log('Navbar rendered getProfile-parsed', JSON.parse(getProfile))
-    console.log('Navbar rendered userDetails', userDetails)
-  }, [])
 
   return (
     <AdminAuthGuard>

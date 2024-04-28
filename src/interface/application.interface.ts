@@ -4,7 +4,7 @@ export interface IApplication {
     date_created?: Date;
     date_update?: Date;
     id: number;
-    responses?: [];
+    submissions?: [];
 }
 
 export interface IcreateApplicationDto{

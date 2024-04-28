@@ -4,7 +4,6 @@ import {
   AccordionSummary,
   Box,
   Button,
-  CircularProgress,
   Paper,
   Typography,
   styled,
@@ -12,7 +11,6 @@ import {
 import { useParams } from "react-router-dom";
 import { MdOutlineExpandMore } from "react-icons/md";
 import dayjs from "dayjs";
-import pdf from "../../assets/API Design Patterns.pdf";
 import { useFetchApplicationQuery } from "../../lib/features/adminSlice";
 import CustomSpinner from "../../components/Spinner/Spinner";
 import useAuthHelper from "../../hooks/auth/authHelper";
@@ -24,11 +22,13 @@ const ViewApplication = () => {
     String(routeParam?.jobId)
   );
 
-  const { isAuthenticated, userDetails } = useAuthHelper();
+  const { isAuthenticated } = useAuthHelper();
+
 
   const handleViewResume = (pdfPath: string) => {
     window.open(pdfPath, "_blank");
   };
+  
 
   return (
     <div
@@ -36,7 +36,7 @@ const ViewApplication = () => {
      md:pt-[3rem]"
     >
       <h2 className="text-2xl text-center text-[#0959AA] font-bold antialiased">
-        {userDetails?.first_name === "user"
+        {!isAuthenticated()
           ? "View Application"
           : "View Application Responses"}
       </h2>
@@ -129,16 +129,16 @@ const ViewApplication = () => {
                     }}
                     className="w-[97%] md:w-[50%] mb-[20px]  px-[13px] md:py-[25px] md:px-[20px] h-full"
                   >
-                    {userDetails?.first_name === "user" ? (
-                      <CandidatePage />
+                    {!isAuthenticated() ? (
+                      <CandidatePage applicationId={routeParam?.jobId} />
                     ) : (
                       <>
                         <h5 className="text-[20px] font-bold antialiased">
                           Application Responses
                         </h5>
                         <div className="mt-[1.2rem] md:mt-[1.5rem]">
-                          {data?.data?.application?.responses?.length === 0 ||
-                          !data?.data?.application?.responses ? (
+                          {data?.data?.application?.submissions?.length === 0 ||
+                          !data?.data?.application?.submissions ? (
                             <Typography
                               className="flex text-black justify-center border-dashed
                    h-[250px] w-[300px] border rounded-lg items-center"
@@ -147,7 +147,7 @@ const ViewApplication = () => {
                             </Typography>
                           ) : (
                             <>
-                              {data?.data?.application?.responses?.map(
+                              {data?.data?.application?.submissions?.map(
                                 (res) => (
                                   <Accordion>
                                     <AccordionSummary
@@ -156,7 +156,7 @@ const ViewApplication = () => {
                                       id="panel1-header"
                                       className="text-[16px] font-semibold"
                                     >
-                                      {res?.fullname}
+                                      {res?.full_name}
                                     </AccordionSummary>
                                     <AccordionDetails className="flex flex-col gap-3">
                                       <InputText value={res?.email} readOnly />
@@ -166,7 +166,7 @@ const ViewApplication = () => {
                                       />
                                       <InputText value={res?.gender} readOnly />
                                       <InputText
-                                        value={res?.hearAboutUs}
+                                        value={res?.referral_source}
                                         readOnly
                                       />
                                       <div className="flex flex-row justify-between my-4">
@@ -185,11 +185,12 @@ const ViewApplication = () => {
                                               transform: "scale(1.05)",
                                             },
                                           }}
-                                          // onClick={() => route("/")}
+                                          onClick={() => handleViewResume(res?.resume)}
+
                                         >
                                           Download Resume
                                         </Button>
-                                        <Button
+                                        {/* <Button
                                           sx={{
                                             backgroundImage:
                                               "linear-gradient(to bottom, #0A66C2, #064079)",
@@ -204,10 +205,10 @@ const ViewApplication = () => {
                                               transform: "scale(1.05)",
                                             },
                                           }}
-                                          onClick={() => handleViewResume(pdf)}
+                                          onClick={() => handleViewResume(res?.resume)}
                                         >
                                           View Resume
-                                        </Button>
+                                        </Button> */}
                                       </div>
                                     </AccordionDetails>
                                   </Accordion>
